@@ -1,10 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<manifest android:versionCode="8" package="org.qgis.qgis" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.9" android:installLocation="preferExternal">
-    <application android:name="org.kde.necessitas.origo.QtApplication" 
-        android:icon="@drawable/icon" 
-        android:label="@string/app_name"
-        android:debuggable="true"
-        >
+<manifest android:versionCode="1" package="org.qgis.qgis" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0">
+    <application android:name="org.kde.necessitas.origo.QtApplication" android:icon="@drawable/icon" android:label="@string/app_name">
         <activity android:name="org.kde.necessitas.origo.QgisActivity" 
             android:noHistory="true" 
             android:icon="@drawable/icon" 
@@ -16,21 +12,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <!-- Git Revision -->
-            <meta-data android:name="android.app.git_rev" android:value="7b05793b5433250b51bfe534e5d3b4bc08a92a6e"/>
+            <meta-data android:name="android.app.git_rev" android:value="a880e040d64d49761bb7d896c296b5fb60d2b993"/>
             <!-- Git Revision -->
         </activity>
         
-        <activity android:name="org.kde.necessitas.origo.QtActivity" 
-            android:configChanges="orientation|locale|fontScale|keyboard|keyboardHidden"
-            >
-<!--        android:screenOrientation="landscape" see http://developer.android.com/reference/android/app/Activity.html#setRequestedOrientation(int) for more-->
-<!--             <intent-filter> -->
-<!--                 <action android:name="android.intent.action.MAIN"/> -->
-<!--                 <category android:name="android.intent.category.LAUNCHER"/> -->
-<!--             </intent-filter> -->
+        <activity android:name="org.kde.necessitas.origo.QtActivity" android:configChanges="orientation|locale|fontScale|keyboard|keyboardHidden" android:label="@string/app_name">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN"/>-->
+<!--                <category android:name="android.intent.category.LAUNCHER"/>-->
+<!--            </intent-filter>-->
             <meta-data android:name="android.app.qt_libs_resource_id" android:resource="@array/qt_libs"/>
             <meta-data android:name="android.app.bundled_libs_resource_id" android:resource="@array/bundled_libs"/>
-            <meta-data android:name="android.app.lib_name" android:value="@string/lib_name"/>
+            <meta-data android:name="android.app.lib_name" android:value="qgis"/>
             <!--  Messages maps -->
             <meta-data android:name="android.app.ministro_not_found_msg" android:value="@string/ministro_not_found_msg"/>
             <meta-data android:name="android.app.ministro_needed_msg" android:value="@string/ministro_needed_msg"/>
@@ -41,7 +34,6 @@
             <!-- Splash screen -->
         </activity>
     </application>
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="15"/>
     <supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

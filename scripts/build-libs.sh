@@ -46,6 +46,7 @@ echo "LD:                               " `which $LD`
 echo "AR:                               " `which $AR`
 echo "RANLIB:                           " `which $RANLIB`
 echo "AS:                               " `which $AS`
+echo "CC --version:                     " `$CC --version`
 
 echo "You can configure all this and more in `dirname $0`/config.conf"
 
