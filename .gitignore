@@ -10,7 +10,6 @@
 /*apk/gen/
 /*apk/Makefile
 /*apk/assets
-/scripts/config.conf
 /build-all-4.4.3-armeabi.log
 /build-all-4.4.3-armeabi-v7a.log
 /build-all-4.6-armeabi.log
