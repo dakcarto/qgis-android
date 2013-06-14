@@ -23,21 +23,21 @@ source `dirname $0`/config.conf
 mkdir -p $APK_DIR/libs/
 rm -vrf $APK_DIR/libs/*
 
-if [ -d $INSTALL_DIR/../armeabi/lib/ ]; then 
+if [ -d $INSTALL_DIR/../armeabi/lib/ ]; then
   mkdir -p $APK_DIR/libs/armeabi/
-  cp -vrfs $INSTALL_DIR/../armeabi/lib/*.so $APK_DIR/libs/armeabi/
+  cp -vRf $INSTALL_DIR/../armeabi/lib/*.so $APK_DIR/libs/armeabi/
   #add gdb server if in Debug mode
   if [ "$BUILD_TYPE" == "Debug" ]; then
-      cp -vrfs $GDB_SERVER $APK_DIR/libs/armeabi/
+      cp -vRf $GDB_SERVER $APK_DIR/libs/armeabi/
   fi
 fi
 
-if [ -d $INSTALL_DIR/../armeabi-v7a/lib/ ]; then 
+if [ -d $INSTALL_DIR/../armeabi-v7a/lib/ ]; then
   mkdir -p $APK_DIR/libs/armeabi-v7a/
-  cp -vrfs $INSTALL_DIR/../armeabi-v7a/lib/*.so $APK_DIR/libs/armeabi-v7a/
+  cp -vRf $INSTALL_DIR/../armeabi-v7a/lib/*.so $APK_DIR/libs/armeabi-v7a/
   #add gdb server if in Debug mode
   if [ "$BUILD_TYPE" == "Debug" ]; then
-      cp -vrfs $GDB_SERVER $APK_DIR/libs/armeabi-v7a/
+      cp -vRf $GDB_SERVER $APK_DIR/libs/armeabi-v7a/
   fi
 fi
 
@@ -51,8 +51,8 @@ echo "break QgisApp::QgisApp" >> $TMP_DIR/gdb.setup
 
 #copy assets to apk
 rm -vrf $APK_DIR/assets
-cp -vrfs $INSTALL_DIR/files $APK_DIR/assets
-cp -vrfs $SRC_DIR/python $APK_DIR/assets/share/
+cp -vRf $INSTALL_DIR/files $APK_DIR/assets
+cp -vRf $SRC_DIR/python $APK_DIR/assets/share/
 cd $APK_DIR/assets/
 zip -r9 assets.zip share
 rm -rf $APK_DIR/assets/share/
