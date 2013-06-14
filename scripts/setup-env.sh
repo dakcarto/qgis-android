@@ -125,10 +125,8 @@ else
   ########CHECK IF flex EXISTS################
   hash flex 2>&- || { echo >&2 "flex required to build QGIS. Aborting."; exit 1; }
 
-  exit
-
   #preparing environnement
-  android update project --name Qgis --path $APK_DIR
+  android update project --name Qgis --target $ANDROID_TARGET --path $APK_DIR
   mkdir -p $TMP_DIR
   mkdir -p $INSTALL_DIR/lib
   mkdir -p $QGIS_BUILD_DIR
@@ -139,7 +137,7 @@ else
   set +e
     git checkout android
   set -e
-  BRANCH="$(git branch 2>/dev/null | sed -e "/^\s/d" -e "s/^\*\s//")"
+  BRANCH="$(git branch 2>/dev/null | sed -e '/^ /d' -e 's/^\* //')"
 
   if [ "$BRANCH" != "android" ]; then
     echo "Aborting, the qgis branch checkedout is not 'android', please clone or fork this repo: git://github.com/mbernasocchi/Quantum-GIS.git"
@@ -163,9 +161,9 @@ else
 
 
   #Get Updated config.sub
-  wget -c "http://git.savannah.gnu.org/cgit/config.git/plain/config.sub" -O $TMP_DIR/config.sub
+  curl "http://git.savannah.gnu.org/cgit/config.git/plain/config.sub" -o $TMP_DIR/config.sub
   #Get Updated guess.sub
-  wget -c "http://git.savannah.gnu.org/cgit/config.git/plain/config.guess" -O $TMP_DIR/config.guess
+  curl "http://git.savannah.gnu.org/cgit/config.git/plain/config.guess" -o $TMP_DIR/config.guess
   chmod +x $TMP_DIR/config.*
   mkdir -p $SRC_DIR
   cd $SRC_DIR
@@ -176,7 +174,7 @@ else
   #######PROJ4#######
   echo "$PROJ_NAME"
   cd $SRC_DIR
-  wget -c http://download.osgeo.org/proj/$PROJ_NAME.tar.gz
+  curl -z $PROJ_NAME.tar.gz -O http://download.osgeo.org/proj/$PROJ_NAME.tar.gz
   tar xf $PROJ_NAME.tar.gz
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $PROJ_NAME.tar.gz; fi
   cd $PROJ_NAME/
@@ -189,25 +187,26 @@ else
   ########GEOS#######
   echo "$GEOS_NAME"
   cd $SRC_DIR
-  wget -c http://download.osgeo.org/geos/$GEOS_NAME.tar.bz2
+  curl -z $GEOS_NAME.tar.bz2 -O http://download.osgeo.org/geos/$GEOS_NAME.tar.bz2
   tar xjf $GEOS_NAME.tar.bz2
   cd $GEOS_NAME/
   cp -vf $TMP_DIR/config.sub ./config.sub
   cp -vf $TMP_DIR/config.guess ./config.guess
   #GET and apply patch for http://trac.osgeo.org/geos/ticket/534
-#  wget -c http://trac.osgeo.org/geos/raw-attachment/ticket/534/int64_crosscomp.patch
+#  curl -z int64_crosscomp.patch -O http://trac.osgeo.org/geos/raw-attachment/ticket/534/int64_crosscomp.patch
 #  patch -i int64_crosscomp.patch -p1
 #  #GET and apply patch for http://trac.osgeo.org/geos/ticket/222
-#  wget -c http://trac.osgeo.org/geos/raw-attachment/ticket/222/$GEOS_NAME0-ARM.patch -O $GEOS_NAME0-ARM.bug222.patch
+#  curl -z $GEOS_NAME0-ARM.bug222.patch http://trac.osgeo.org/geos/raw-attachment/ticket/222/$GEOS_NAME0-ARM.patch -o $GEOS_NAME0-ARM.bug222.patch
 #  patch -i $GEOS_NAME0-ARM.bug222.patch -p0
 #  ./autogen.sh
   patch -i $PATCH_DIR/geos.patch -p1
   #######END GEOS#######
 
+
   #######EXPAT#######
   echo "$EXPAT_NAME"
   cd $SRC_DIR
-  wget -c http://freefr.dl.sourceforge.net/project/expat/expat/$EXPAT_VERSION/$EXPAT_NAME.tar.gz
+  curl -z $EXPAT_NAME.tar.gz -O http://freefr.dl.sourceforge.net/project/expat/expat/$EXPAT_VERSION/$EXPAT_NAME.tar.gz
   tar xf $EXPAT_NAME.tar.gz
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $EXPAT_NAME.tar.gz; fi
   cd $EXPAT_NAME
@@ -220,7 +219,7 @@ else
   #######GSL1.14#######
   echo "GSL"
   cd $SRC_DIR
-  wget -c http://ftp.gnu.org/gnu/gsl/$GSL_NAME.tar.gz
+  curl -z $GSL_NAME.tar.gz -O http://ftp.gnu.org/gnu/gsl/$GSL_NAME.tar.gz
   tar xf $GSL_NAME.tar.gz
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $GSL_NAME.tar.gz; fi
   cd $GSL_NAME/
@@ -233,13 +232,13 @@ else
   #######GDAL#######
   echo "$GDAL_NAME"
   cd $SRC_DIR
-  wget -c http://download.osgeo.org/gdal/$GDAL_NAME.tar.gz
+  curl -z $GDAL_NAME.tar.gz -O http://download.osgeo.org/gdal/CURRENT/$GDAL_NAME.tar.gz
   tar xf $GDAL_NAME.tar.gz
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $GDAL_NAME.tar.gz; fi
   cd $GDAL_NAME/
   cp -vf $TMP_DIR/config.sub ./config.sub
   cp -vf $TMP_DIR/config.guess ./config.guess
-#  wget -c http://trac.osgeo.org/gdal/raw-attachment/ticket/3952/android.diff -O $GDAL_NAME-ANDROID.bug3952.patch
+#  curl -z bug3952.patch http://trac.osgeo.org/gdal/raw-attachment/ticket/3952/android.diff -o $GDAL_NAME-ANDROID.bug3952.patch
 #  patch -i $GDAL_NAME-ANDROID.bug3952.patch -p0
   patch -p1 -i $PATCH_DIR/gdal.patch
   #GDAL does not seem to support building in subdirs
@@ -267,7 +266,7 @@ else
   #######LIBICONV1.13.1#######
   echo "LIBICONV"
   cd $SRC_DIR
-  wget -c http://ftp.gnu.org/pub/gnu/libiconv/$ICONV_NAME.tar.gz
+  curl -z $ICONV_NAME.tar.gz -O http://ftp.gnu.org/pub/gnu/libiconv/$ICONV_NAME.tar.gz
   tar xf $ICONV_NAME.tar.gz
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $ICONV_NAME.tar.gz; fi
   cd $ICONV_NAME/
@@ -281,7 +280,7 @@ else
   #######$FREEXL_NAME#######
   echo "$FREEXL_NAME"
   cd $SRC_DIR
-  wget -c http://www.gaia-gis.it/gaia-sins/freexl-sources/$FREEXL_NAME.tar.gz
+  curl -z $FREEXL_NAME.tar.gz -O http://www.gaia-gis.it/gaia-sins/freexl-sources/$FREEXL_NAME.tar.gz
   tar xf $FREEXL_NAME.tar.gz
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $FREEXL_NAME.tar.gz; fi
   cd $FREEXL_NAME/
@@ -293,7 +292,7 @@ else
   #######SPATIALINDEX1.7.1#######
   echo "SPATIALINDEX"
   cd $SRC_DIR
-  wget -c http://download.osgeo.org/libspatialindex/$SPATIALINDEX_NAME.tar.gz
+  curl -z $SPATIALINDEX_NAME.tar.gz -O http://download.osgeo.org/libspatialindex/$SPATIALINDEX_NAME.tar.gz
   tar xf $SPATIALINDEX_NAME.tar.gz
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $SPATIALINDEX_NAME.tar.gz; fi
   cd $SPATIALINDEX_NAME/
@@ -307,7 +306,7 @@ else
   #########SPATIALITE########
   echo "SPATIALITE"
   cd $SRC_DIR
-  wget -c http://www.gaia-gis.it/gaia-sins/libspatialite-sources/$SPATIALITE_NAME.tar.gz
+  curl -z $SPATIALITE_NAME.tar.gz -O http://www.gaia-gis.it/gaia-sins/libspatialite-sources/$SPATIALITE_NAME.tar.gz
   tar xf $SPATIALITE_NAME.tar.gz
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $SPATIALITE_NAME.tar.gz; fi
   cd $SRC_DIR/$SPATIALITE_NAME/
@@ -318,7 +317,7 @@ else
 #  #######SQLITE3.7.4#######
 #  echo "SQLITE"
 #  cd $SRC_DIR
-#  wget -c http://www.sqlite.org/sqlite-autoconf-3070400.tar.gz
+#  curl -z sqlite-autoconf-3070400.tar.gz -O http://www.sqlite.org/sqlite-autoconf-3070400.tar.gz
 #  tar xf sqlite-autoconf-3070400.tar.gz
 #  if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm sqlite-autoconf-3070400.tar.gz; fi
 #  cd sqlite-autoconf-3070400/
@@ -329,14 +328,17 @@ else
   #######QWT5.2.0#######
   echo "QWT"
   cd $SRC_DIR
-  wget -c http://downloads.sourceforge.net/project/qwt/qwt/$QWT_VERSION/$QWT_NAME.tar.bz2
+  if ! [ -f $QWT_NAME.tar.bz2 ]; then
+    # have curl follow sourceforge's redirects
+    curl -L -O http://downloads.sourceforge.net/project/qwt/qwt/$QWT_VERSION/$QWT_NAME.tar.bz2
+  fi
   tar xjf $QWT_NAME.tar.bz2
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $QWT_NAME.tar.bz2; fi
   cd $QWT_NAME/
 
   #edit qwtconfig.pri
-  sed -i "s|CONFIG     += QwtDesigner|#CONFIG     += QwtDesigner|" qwtconfig.pri
-  sed -i "s|CONFIG           += QwtDll|CONFIG     += QwtDll plugin|" qwtconfig.pri
+  sed -i "" "s|CONFIG     += QwtDesigner|#CONFIG     += QwtDesigner|" qwtconfig.pri
+  sed -i "" "s|CONFIG           += QwtDll|CONFIG     += QwtDll plugin|" qwtconfig.pri
   #######END QWT5.2.0#######
 
 #  #######openssl-android#######
@@ -356,7 +358,7 @@ else
   #######$PQ_NAME#######
   echo "$PQ_NAME"
   cd $SRC_DIR
-  wget -c http://ftp.postgresql.org/pub/source/v$PQ_VERSION/$PQ_NAME.tar.bz2
+  curl -z $PQ_NAME.tar.bz2 -O http://ftp.postgresql.org/pub/source/v$PQ_VERSION/$PQ_NAME.tar.bz2
   tar xjf $PQ_NAME.tar.bz2
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $PQ_NAME.tar.bz2; fi
   cd $PQ_NAME/
@@ -369,8 +371,8 @@ else
   #######PYTHON#############################
   echo "python"
   cd $SRC_DIR
-  wget -c https://android-python27.googlecode.com/hg/python-build-with-qt/binaries/python_27.zip
-  wget -c https://android-python27.googlecode.com/hg/python-build-with-qt/binaries/python_extras_27.zip
+  curl -z python_27.zip -O https://android-python27.googlecode.com/hg/python-build-with-qt/binaries/python_27.zip
+  curl -z python_extras_27.zip -O https://android-python27.googlecode.com/hg/python-build-with-qt/binaries/python_extras_27.zip
 
   unzip python_27.zip
   unzip python_extras_27.zip -d pythonTMP

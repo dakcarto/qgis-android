@@ -74,12 +74,12 @@ cd $QGIS_BUILD_DIR
 # LDFLAGS, CFLAGS and CXXFLAGS are taken care of by the toolchain file
 MY_CMAKE_FLAGS=" \
 -DANDROID_ABI=$ANDROID_ABI \
--DBISON_EXECUTABLE=/usr/bin/bison \
+-DBISON_EXECUTABLE=/usr/local/bin/bison \
 -DCHARSET_LIBRARY=$INSTALL_DIR/lib/libcharset.so \
 -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
 -DCMAKE_VERBOSE_MAKEFILE=OFF \
 -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR \
--DCMAKE_FIND_ROOT_PATH_CUSTOM_APPEND=$QT_ROOT \ 
+-DCMAKE_FIND_ROOT_PATH_CUSTOM_APPEND=$QT_ROOT \
 -DCMAKE_TOOLCHAIN_FILE=$SCRIPT_DIR/android.toolchain.cmake \
 -DEXECUTABLE_OUTPUT_PATH=$INSTALL_DIR/bin \
 -DLIBRARY_OUTPUT_DIRECTORY=$INSTALL_DIR/lib \
@@ -116,10 +116,10 @@ MY_CMAKE_FLAGS=" \
 -DQT_QMAKE_EXECUTABLE=$QMAKE \
 -DQWT_INCLUDE_DIR=$INSTALL_DIR/include \
 -DQWT_LIBRARY=$INSTALL_DIR/lib/libqwt.so \
--DSPATIALINDEX_LIBRARY=$INSTALL_DIR/lib/libspatialindex.so
+-DSPATIALINDEX_LIBRARY=$INSTALL_DIR/lib/libspatialindex.so \
 -DWITH_APIDOC=OFF \
 -DWITH_ASTYLE=OFF \
--DWITH_BINDINGS=ON \
+-DWITH_BINDINGS=OFF \
 -DWITH_DESKTOP=$WITH_DESKTOP \
 -DWITH_GLOBE=OFF \
 -DWITH_GRASS=OFF \
@@ -133,13 +133,15 @@ MY_CMAKE_FLAGS=" \
 -DGITCOMMAND=`which git` \
 -DGIT_MARKER=$QGIS_DIR/.git/index \
 -DSQLITE3_INCLUDE_DIR=$INSTALL_DIR/include \
--DSQLITE3_LIBRARY=$INSTALL_DIR/lib/libsqlite3.so \
--DPYTHON_EXECUTABLE=/usr/bin/python \
--DPYTHON_LIBRARY=/home/marco/dev/android-python27/python-build-with-qt/build/lib/libpython2.7.so \
--DPYTHON_INCLUDE_PATH=/home/marco/dev/android-python27/python-build-with-qt/build/include/python2.7"
-#-DPYTHON_EXECUTABLE=$SRC_DIR/python/bin/python2.7 \
-#-DPYTHON_LIBRARY=$SRC_DIR/python/lib/libpython2.7.so"
+-DSQLITE3_LIBRARY=$INSTALL_DIR/lib/libsqlite3.so"
 
+# -DPYTHON_EXECUTABLE=$SRC_DIR/python/bin/python2.7 \
+# -DPYTHON_LIBRARY=$SRC_DIR/python/lib/libpython2.7.so"
+
+# -DPYTHON_EXECUTABLE=/usr/bin/python \
+
+# -DPYTHON_LIBRARY=/home/marco/dev/android-python27/python-build-with-qt/build/lib/libpython2.7.so \
+# -DPYTHON_INCLUDE_PATH=/home/marco/dev/android-python27/python-build-with-qt/build/include/python2.7"
 
 #uncomment the next 2 lines to only get the needed cmake flags echoed
 #echo $MY_CMAKE_FLAGS
@@ -157,14 +159,16 @@ if [ ! -f CMakeCache.txt ] || [ $CONFIGURE -eq 1 ] ; then
     CFLAGS_DEBUG=$MY_STD_CFLAGS \
     CXXFLAGS_DEBUG=$MY_STD_CXXFLAGS \
     LDFLAGS=$MY_STD_LDFLAGS \
-    $MY_CMAKE $MY_CMAKE_FLAGS ..
+    $MY_CMAKE $MY_CMAKE_FLAGS $QGIS_DIR
   else
     CFLAGS=$MY_STD_CFLAGS \
     CXXFLAGS=$MY_STD_CXXFLAGS \
     LDFLAGS=$MY_STD_LDFLAGS \
-    $MY_CMAKE $MY_CMAKE_FLAGS ..
+    $MY_CMAKE $MY_CMAKE_FLAGS $QGIS_DIR
   fi
 fi
+
+#exit 0
 
 if [ $EXPERIMENTAL -eq 1 ] ; then
     make -j$CORES Experimental
@@ -183,4 +187,4 @@ GIT_REV=$(git rev-parse HEAD)
 mkdir -p $INSTALL_DIR/files
 #echo $GIT_REV > $INSTALL_DIR/files/version.txt
 #update apk manifest
-sed -i "s|<meta-data android:name=\"android.app.git_rev\" android:value=\".*\"/>|<meta-data android:name=\"android.app.git_rev\" android:value=\"$GIT_REV\"/>|" $APK_DIR/AndroidManifest.xml
+sed -i "" "s|<meta-data android:name=\"android.app.git_rev\" android:value=\".*\"/>|<meta-data android:name=\"android.app.git_rev\" android:value=\"$GIT_REV\"/>|" $APK_DIR/AndroidManifest.xml
