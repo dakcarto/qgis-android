@@ -23,7 +23,7 @@ $ADB kill-server
 $ADB devices
 
 echo "" > /tmp/logcat.log
-gnome-system-log /tmp/logcat.log &
+# gnome-system-log /tmp/logcat.log &
 $ADB logcat -c
 
 if [ "$1" = "--clear" ]; then
