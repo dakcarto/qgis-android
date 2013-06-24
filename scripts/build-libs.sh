@@ -22,7 +22,7 @@ source `dirname $0`/config.conf
 ########START SCRIPT########
 usage(){
  echo "Usage:"
- echo " build-libs.sh 
+ echo " build-libs.sh
         --help (-h)
         --version (-v)
         --echo <text> (-e)      this option does noting"
@@ -81,20 +81,20 @@ while test "$1" != "" ; do
 done
 
 #confirm settings if not running build_all.sh
-if [ ! -n "${QGIS_ANDROID_BUILD_ALL+x}" || $FORCE_CONTINUE != 1 ]; then
+if [ ! -n "${QGIS_ANDROID_BUILD_ALL+x}" ] || [ $FORCE_CONTINUE != 1 ]; then
   CONTINUE="n"
   echo "OK? [y, n*]:"
   read CONTINUE
 else
   CONTINUE="y"
 fi
-  
+
 CONTINUE=$(echo $CONTINUE | tr "[:upper:]" "[:lower:]")
 if [ "$CONTINUE" != "y" ]; then
   echo "Abort"
   exit 1
 else
-  
+
   cd $SRC_DIR
 
   mkdir -p $INSTALL_DIR/lib
@@ -103,22 +103,22 @@ else
   cp -vf $GDB_SERVER $INSTALL_DIR/lib
 
 #  #########QTUITOOLS########
-#  echo "QTUITOOLS"	
+#  echo "QTUITOOLS"
 #  cd $QT_SRC/tools/designer/src/uitools
 #  mkdir -p build-$ANDROID_ABI
 #  cd build-$ANDROID_ABI
 #  CFLAGS=$MY_STD_CFLAGS \
 #  CXXFLAGS=$MY_STD_CXXFLAGS \
 #  LDFLAGS=$MY_STD_LDFLAGS \
-#  $QMAKE  ../uitools.pro 
+#  $QMAKE  ../uitools.pro
 #  make -j$CORES 2>&1 | tee make.out
 #  make -j$CORES 2>&1 install | tee makeInstall.out
 #  cp -pf $QT_ROOT/lib/libQtUiTools.so $INSTALL_DIR/lib
 #  #########END QTUITOOLS########
-  
+
 
   #########QWT5.2.0########
-  echo "QWT5.2.0"	
+  echo "QWT5.2.0"
   cd $SRC_DIR/$QWT_NAME/
   sed -i "s|    INSTALLBASE    =.*|    INSTALLBASE    = $INSTALL_DIR|" qwtconfig.pri
   mkdir -p build-$ANDROID_ABI
@@ -148,7 +148,8 @@ else
   #compile
   make -j$CORES 2>&1 install | tee makeInstall.out
   #########END EXPAT2.0.1########
-  
+
+
   #########GSL1.14########
   echo "GSL1.14"
   cd $SRC_DIR/$GSL_NAME/
@@ -174,12 +175,12 @@ else
   CXXFLAGS=$MY_STD_CXXFLAGS \
   LDFLAGS=$MY_STD_LDFLAGS \
   gl_cv_header_working_stdint_h=yes \
-  ../configure $MY_STD_CONFIGURE_FLAGS 
+  ../configure $MY_STD_CONFIGURE_FLAGS
   #compile
   make -j$CORES 2>&1 | tee make.out
   make -j$CORES 2>&1 install | tee makeInstall.out
   #########END LIBICONV1.13.1########
-  
+
   #########freexl########
   echo "$FREEXL_NAME"
   cd $SRC_DIR/$FREEXL_NAME/
@@ -253,7 +254,7 @@ else
   make -j$CORES 2>&1 | tee make.out
   make -j$CORES 2>&1 install | tee makeInstall.out
   #########END GEOS########
-  
+
   #########SPATIALITE########
   echo "$SPATIALITE_NAME"
   cd $SRC_DIR/$SPATIALITE_NAME/
@@ -282,7 +283,7 @@ else
   make -j$CORES 2>&1 | tee make.out
   make -j$CORES 2>&1 install | tee makeInstall.out
   #########END GDAL########
-  
+
 
 #  #########GDAL-trunk########
 #  echo "GDAL trunk"
@@ -309,20 +310,20 @@ else
 #  cp -rfv include/openssl $INSTALL_DIR/include/openssl
 #  cp -fv libs/$ANDROID_ABI/libcrypto.so $INSTALL_DIR/lib/
 #  cp -fv libs/$ANDROID_ABI/libssl.so $INSTALL_DIR/lib/
-  
-  
+
+
   ########$PQ_NAME########
   echo "postgresql"
   cd $SRC_DIR/$PQ_NAME
   mkdir -p build-$ANDROID_ABI
   cd build-$ANDROID_ABI
-  #no ssl  
+  #no ssl
   CPPFLAGS="-I$INSTALL_DIR/include" \
   CFLAGS="$MY_STD_CFLAGS" \
   CXXFLAGS="$MY_STD_CFLAGS" \
   LDFLAGS="$MY_STD_LDFLAGS" \
   $SRC_DIR/$PQ_NAME/configure $MY_STD_CONFIGURE_FLAGS --without-readline
-  
+
 #  #configure with openssl
 #  CPPFLAGS="-I$INSTALL_DIR/include" \
 #  CFLAGS="$MY_STD_CFLAGS -L$INSTALL_DIR/lib/ -I$INSTALL_DIR/include" \
@@ -330,9 +331,9 @@ else
 #  LDFLAGS="$MY_STD_LDFLAGS" \
 #  LIBS="-lcrypto -lssl -lsupc++ -lstdc++" \
 #  $SRC_DIR/$PQ_NAME/configure $MY_STD_CONFIGURE_FLAGS --without-readline --with-openssl
-  
-  make -j$CORES 2>&1 -C src/interfaces/libpq | tee make.out    
-  
+
+  make -j$CORES 2>&1 -C src/interfaces/libpq | tee make.out
+
   #simulate of make install
   echo "installing libpq"
   cd $SRC_DIR/$PQ_NAME
@@ -340,6 +341,6 @@ else
   cp -fv src/interfaces/libpq/libpq-fe.h $INSTALL_DIR/include
   cp -fv build-$ANDROID_ABI/src/interfaces/libpq/libpq.so $INSTALL_DIR/lib/
   ######END $PQ_NAME#######
-  
+
   exit 0
 fi

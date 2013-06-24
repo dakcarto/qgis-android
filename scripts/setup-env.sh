@@ -23,7 +23,7 @@ source `dirname $0`/config.conf
 ########START SCRIPT########
 usage(){
  echo "Usage:"
- echo " setup-env.sh 
+ echo " setup-env.sh
         --removedownloads (-r)  removes the downloaded archives after unpacking
         --help (-h)
         --version (-v)
@@ -43,7 +43,7 @@ else
   echo "NOTICE: if you build for a newer device (hummingbird, tegra,... processors)\
  armeabi-v7a arch would increase the performance. Set the architecture accordingly\
  in the conf file. Look as well for MY_FPU in the conf file for further tuning."
-fi  
+fi
 echo "PATH:"
 echo $PATH
 echo "CFLAGS:                           " $MY_STD_CFLAGS
@@ -115,38 +115,38 @@ else
 
   ########CHECK IF ant EXISTS################
   hash ant 2>&- || { echo >&2 "ant required to create APK. Aborting."; exit 1; }
-  
+
   ########CHECK IF cmake EXISTS################
   hash cmake 2>&- || { echo >&2 "cmake required to build QGIS. Aborting."; exit 1; }
-  
+
   ########CHECK IF bison EXISTS################
   hash bison 2>&- || { echo >&2 "bison required to build QGIS. Aborting."; exit 1; }
-  
+
   ########CHECK IF flex EXISTS################
   hash flex 2>&- || { echo >&2 "flex required to build QGIS. Aborting."; exit 1; }
-  
+
   #preparing environnement
-  android update project --name Qgis --path $APK_DIR
+  android update project --name Qgis --target $ANDROID_TARGET --path $APK_DIR
   mkdir -p $TMP_DIR
   mkdir -p $INSTALL_DIR/lib
   mkdir -p $QGIS_BUILD_DIR
   rm -rf $QGIS_BUILD_DIR/*
   cd $QGIS_DIR
-  
+
   #check if an android branch of qgis is present
   set +e
     git checkout android
   set -e
   BRANCH="$(git branch 2>/dev/null | sed -e "/^\s/d" -e "s/^\*\s//")"
-  
+
   if [ "$BRANCH" != "android" ]; then
     echo "Aborting, the qgis branch checkedout is not 'android', please clone or fork this repo: git://github.com/mbernasocchi/Quantum-GIS.git"
     exit 1
   else
     echo "Environement looks good, lets start"
   fi
-  
-  
+
+
   ########CREATE STANDALONE TOOLCHAIN########
   echo "CREATING STANDALONE TOOLCHAIN"
   #echo "REPLACING STANDALONE TOOLCHAIN generator script"
@@ -168,9 +168,9 @@ else
   mkdir -p $SRC_DIR
   cd $SRC_DIR
   echo "Removing all build folders"
-  rm -rvf  $GEOS_NAME $SPATIALITE_NAME python $SPATIALINDEX_NAME-armeabi $SPATIALINDEX_NAME-armeabi-v7a $FREEXL_NAME $GSL_NAME $PQ_NAME $QWT_NAME $ICONV_NAME $PROJ_NAME  $GDAL_NAME-armeabi $GDAL_NAME-armeabi-v7a 
-  
-  
+  rm -rvf  $GEOS_NAME $SPATIALITE_NAME python $SPATIALINDEX_NAME-armeabi $SPATIALINDEX_NAME-armeabi-v7a $FREEXL_NAME $GSL_NAME $PQ_NAME $QWT_NAME $ICONV_NAME $PROJ_NAME  $GDAL_NAME-armeabi $GDAL_NAME-armeabi-v7a
+
+
   #######PROJ4#######
   echo "$PROJ_NAME"
   cd $SRC_DIR
@@ -182,8 +182,8 @@ else
   cp -vf $TMP_DIR/config.sub ./config.sub
   cp -vf $TMP_DIR/config.guess ./config.guess
   #######END PROJ4#######
-  
-  
+
+
   ########GEOS#######
   echo "$GEOS_NAME"
   cd $SRC_DIR
@@ -202,6 +202,7 @@ else
   patch -i $PATCH_DIR/geos.patch -p1
   #######END GEOS#######
 
+
   #######EXPAT#######
   echo "$EXPAT_NAME"
   cd $SRC_DIR
@@ -213,8 +214,8 @@ else
   cp -vf $TMP_DIR/config.guess ./conftools/config.guess
   patch -i $PATCH_DIR/expat.patch -p1
   ######END EXPAT2.0.1#######
-  
-  
+
+
   #######GSL1.14#######
   echo "GSL"
   cd $SRC_DIR
@@ -231,7 +232,7 @@ else
   #######GDAL#######
   echo "$GDAL_NAME"
   cd $SRC_DIR
-  wget -c http://download.osgeo.org/gdal/$GDAL_NAME.tar.gz
+  wget -c http://download.osgeo.org/gdal/CURRENT/$GDAL_NAME.tar.gz
   tar xf $GDAL_NAME.tar.gz
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $GDAL_NAME.tar.gz; fi
   cd $GDAL_NAME/
@@ -251,13 +252,13 @@ else
 #  if [ -d 'gdal-trunk' ]; then
 #    svn revert --recursive gdal-trunk
 #    svn up gdal-trunk
-#  else 
+#  else
 #    svn checkout https://svn.osgeo.org/gdal/trunk/gdal gdal-trunk
 #  fi
 #  cd gdal-trunk/
 #  cp -vf $TMP_DIR/config.sub ./config.sub
 #  cp -vf $TMP_DIR/config.guess ./config.guess
-#  patch -i $PATCH_DIR/gdal.patch 
+#  patch -i $PATCH_DIR/gdal.patch
 ##  GDAL does not seem to support building in subdirs
 #  cp -vrf $SRC_DIR/gdal-trunk/ $SRC_DIR/gdal-trunk-armeabi/
 #  cp -vrf $SRC_DIR/gdal-trunk/ $SRC_DIR/gdal-trunk-armeabi-v7a/
@@ -271,11 +272,11 @@ else
   cd $ICONV_NAME/
   patch -p1 -i $PATCH_DIR/libiconv.patch
   cp -vf $TMP_DIR/config.sub ./build-aux/config.sub
-  cp -vf $TMP_DIR/config.guess ./build-aux/config.guess  
+  cp -vf $TMP_DIR/config.guess ./build-aux/config.guess
   cp -vf $TMP_DIR/config.sub ./libcharset/build-aux/config.sub
   cp -vf $TMP_DIR/config.guess ./libcharset/build-aux/config.guess
   #######END LIBICONV1.13.1#######
-  
+
   #######$FREEXL_NAME#######
   echo "$FREEXL_NAME"
   cd $SRC_DIR
@@ -287,7 +288,7 @@ else
   cp -vf $TMP_DIR/config.sub ./config.sub
   cp -vf $TMP_DIR/config.guess ./config.guess
   #######END $FREEXL_NAME#######
-  
+
   #######SPATIALINDEX1.7.1#######
   echo "SPATIALINDEX"
   cd $SRC_DIR
@@ -323,7 +324,7 @@ else
 #  cp -vf $TMP_DIR/config.sub ./config.sub
 #  cp -vf $TMP_DIR/config.guess ./config.guess
 #  #######END SQLITE3.7.4#######
-  
+
   #######QWT5.2.0#######
   echo "QWT"
   cd $SRC_DIR
@@ -336,7 +337,7 @@ else
   sed -i "s|CONFIG     += QwtDesigner|#CONFIG     += QwtDesigner|" qwtconfig.pri
   sed -i "s|CONFIG           += QwtDll|CONFIG     += QwtDll plugin|" qwtconfig.pri
   #######END QWT5.2.0#######
-  
+
 #  #######openssl-android#######
 #  #needed for postgresssql
 #  echo "openssl-android"
@@ -347,38 +348,38 @@ else
 #  else
 #    git clone git://github.com/mbernasocchi/openssl-android.git
 #  fi
-#  
+#
 #  cd openssl-android
 #  echo "APP_ABI := $ANDROID_ABI" >> jni/Application.mk
-#  
+#
   #######$PQ_NAME#######
   echo "$PQ_NAME"
   cd $SRC_DIR
   wget -c http://ftp.postgresql.org/pub/source/v$PQ_VERSION/$PQ_NAME.tar.bz2
-  tar xjf $PQ_NAME.tar.bz2 
+  tar xjf $PQ_NAME.tar.bz2
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $PQ_NAME.tar.bz2; fi
   cd $PQ_NAME/
   cp -vf $TMP_DIR/config.sub ./config/config.sub
-  cp -vf $TMP_DIR/config.guess ./config/config.guess  
-  
+  cp -vf $TMP_DIR/config.guess ./config/config.guess
+
   patch -p1 -i $PATCH_DIR/libpq.patch
   #######END $PQ_NAME#######
-  
+
   #######PYTHON#############################
   echo "python"
-  cd $SRC_DIR  
+  cd $SRC_DIR
   wget -c https://android-python27.googlecode.com/hg/python-build-with-qt/binaries/python_27.zip
   wget -c https://android-python27.googlecode.com/hg/python-build-with-qt/binaries/python_extras_27.zip
-  
+
   unzip python_27.zip
   unzip python_extras_27.zip -d pythonTMP
   mv pythonTMP/python/* python/lib/python2.7/
   rm -rf pythonTMP
-  
+
   #######APK###############################
   cd $APK_DIR
   android update project -p . -n qgis
-  
+
   if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm -rf $TMP_DIR; fi
   exit 0
 fi
