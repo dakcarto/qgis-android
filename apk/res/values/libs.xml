@@ -17,8 +17,8 @@
 <!--      <item>crypto</item>-->
 <!--      <item>ssl</item>-->
       <item>pq</item>
-<!--      <item>sqlite</item>-->
-<!--      <item>spatialite</item>-->
+      <item>sqlite3</item>
+      <item>spatialite</item>
       <item>qgis_core</item>
       <item>qgis_gui</item>
       <item>qgissqlanyconnection</item>
@@ -46,6 +46,8 @@
 <!--      <item>crypto</item>-->
 <!--      <item>ssl</item>-->
       <item>pq</item>
+      <item>sqlite3</item>
+      <item>spatialite</item>
       <item>qgis_core</item>
       <item>qgissqlanyconnection</item>
       <item>qgis_analysis</item>

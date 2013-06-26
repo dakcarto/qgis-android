@@ -303,17 +303,6 @@ else
   mv -vf $SRC_DIR/$SPATIALINDEX_NAME/ $SRC_DIR/$SPATIALINDEX_NAME-armeabi-v7a/
   #######END SPATIALINDEX1.7.1#######
 
-  #########SPATIALITE########
-  echo "SPATIALITE"
-  cd $SRC_DIR
-  wget -c http://www.gaia-gis.it/gaia-sins/libspatialite-sources/$SPATIALITE_NAME.tar.gz
-  tar xf $SPATIALITE_NAME.tar.gz
-  if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $SPATIALITE_NAME.tar.gz; fi
-  cd $SRC_DIR/$SPATIALITE_NAME/
-  patch -p1 -i $PATCH_DIR/spatialite.patch
-  cp -vf $TMP_DIR/config.sub ./config.sub
-  cp -vf $TMP_DIR/config.guess ./config.guess
-
 #  #######SQLITE3.7.4#######
 #  echo "SQLITE"
 #  cd $SRC_DIR
@@ -324,6 +313,17 @@ else
 #  cp -vf $TMP_DIR/config.sub ./config.sub
 #  cp -vf $TMP_DIR/config.guess ./config.guess
 #  #######END SQLITE3.7.4#######
+
+  #########SPATIALITE########
+  echo "SPATIALITE"
+  cd $SRC_DIR
+  wget -c http://www.gaia-gis.it/gaia-sins/libspatialite-sources/$SPATIALITE_NAME.tar.gz
+  tar xf $SPATIALITE_NAME.tar.gz
+  if [ "$REMOVE_DOWNLOADS" -eq 1 ] ; then rm $SPATIALITE_NAME.tar.gz; fi
+  cd $SRC_DIR/$SPATIALITE_NAME/
+  patch -p1 -i $PATCH_DIR/spatialite.patch
+  cp -vf $TMP_DIR/config.sub ./config.sub
+  cp -vf $TMP_DIR/config.guess ./config.guess
 
   #######QWT5.2.0#######
   echo "QWT"
